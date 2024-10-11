@@ -21,7 +21,8 @@
   },
   "private": "false",
   "scripts": {
-    "build:doc": "npx @redocly/cli@latest build-docs openapi.yaml"
+    "build:doc": "redocly build-docs openapi.yaml --output=index.html",
+    "lint": "redocly lint --extends recommended openapi.yaml"
   },
   "dependencies": {
     "ci": "^2.3.0"

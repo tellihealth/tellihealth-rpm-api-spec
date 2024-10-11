@@ -1,4 +1,4 @@
-# Tellihealth RPM API specification
+# Tellihealth RPM API specification - Unofficial
 
 This specification is still unofficial and should **not be used** until this section is removed.
 
