@@ -1,0 +1,29 @@
+{
+  "name": "tellihealth-rpm-api-spec",
+  "version": "1.0.0",
+  "description": "TelliHealth OpenAPI for RPM API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tellihealth/tellihealth-rpm-api-spec.git"
+  },
+  "engines": {
+    "node": "^20"
+  },
+  "keywords": [
+    "OpenAPI",
+    "API",
+    "RPM API"
+  ],
+  "author": "Simun Romic <sromic@evelyn.one>",
+  "devDependencies": {
+    "@redocly/cli": "^1.25.5",
+    "react-dom": "^18.3.1"
+  },
+  "private": "false",
+  "scripts": {
+    "build:doc": "npx @redocly/cli@latest build-docs openapi.yaml"
+  },
+  "dependencies": {
+    "ci": "^2.3.0"
+  }
+}
