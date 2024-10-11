@@ -1,0 +1,993 @@
+openapi: 3.1.0
+info:
+  title: Tellihealth RPM API - Unofficial
+  version: 1.0.0
+  description:
+    $ref: ./md/main_description.md
+  x-audience: external-partner
+  x-logo:
+    url: https://i0.wp.com/tellihealth.com/wp-content/uploads/2023/05/TelliHealthLogo1-2.webp?w=500&ssl=1
+    backgroundColor: #FFFFFF
+    altText: Tellihealth logo
+
+servers:
+  - url: https://dev-api.tellihealth.com
+    description: Dev
+  - url: https://preprod-api.tellihealth.com
+    description: Preprod
+  - url: https://api.tellihealth.com
+    description: Prod
+
+tags:
+  - name: V1Webhook
+    x-displayName: V1 model
+    description: V1 webhook model
+  - name: V2Webhook
+    x-displayName: V2 model
+    description: V2 webhook model
+  - name: DeviceSettings
+    x-displayName: Manage device settings
+    description: Change the device settings.
+
+x-tagGroups:
+  - name: Old webhook models V1
+    tags:
+      - V1Webhook
+  - name: New webhook models V2
+    tags:
+      - V2Webhook
+  - name: Device settings
+    tags:
+      - DeviceSettings
+
+paths:
+  /v1/devices/{deviceId}/settings:
+    post:
+      summary: Updates the device settings
+      description: Updates the device settings
+      tags: 
+        - DeviceSettings
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{15}$'
+          description: The IMEI of the device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDeviceSettings'
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+webhooks:
+  heartbeat:
+    post:
+      summary: A new heartbeat has been received from the device
+      description: A new heartbeat has been received from the device
+      tags:
+        - V2Webhook
+      requestBody:
+        description: Heartbeat from the device
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Heartbeat'
+      responses:
+        '2XX':
+          description: Return a 2XX status to indicate that the data was received successfully
+  reminderCleared:
+    post:
+      summary: User has cleared the reminder on the device
+      description: User has cleared the reminder on the device
+      tags:
+        - V2Webhook
+      requestBody:
+        description: Cleared reminder from the device
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReminderCleared'
+      responses:
+        '2XX':
+          description: Return a 2XX status to indicate that the data was received successfully
+  settingsResponse:
+    post:
+      summary: The device responded to settings change request
+      description: The device responded to settings change request
+      tags:
+        - V2Webhook
+      requestBody:
+        description: The device response to the settings change request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettingsResponse'
+      responses:
+        '2XX':
+          description: Return a 2XX status to indicate that the data was received successfully
+  readingsV1:
+    post:
+      summary: V1 readings data - to be deprecated
+      description: A new reading has been received from the device
+      tags:
+        - V1Webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReadingsV1'
+            examples:
+              BloodPressure:
+                summary: Blood Pressure Reading
+                value:
+                  data:
+                    arrhythmia: 0
+                    diastolic: 98
+                    pulse: 62
+                    systolic: 122
+                  deviceId: '864593054464085'
+                  readingType: 'BloodPressure'
+                  time: '1721382524000'
+              BloodGlucose:
+                summary: Blood Glucose Reading
+                value:
+                  data:
+                    glucose: 110
+                    readingPeriod: 'before'
+                  deviceId: '864351055723276'
+                  readingType: 'BloodGlucose'
+                  time: '1721386225000'
+              Weight:
+                summary: Weight Reading
+                value:
+                  data:
+                    unit: 'lb'
+                    weight: 135
+                  deviceId: '864200059066903'
+                  readingType: 'Weight'
+                  time: '1721400730106'
+              SpO2:
+                summary: SpO2 Reading
+                value:
+                  data:
+                    battery: 61
+                    pi: 20
+                    pulse: 83
+                    rsrp: 24
+                    spo2: 98
+                  deviceId: '351358815532467'
+                  readingType: 'SpO2'
+                  time: '1721400715000'
+              Temperature:
+                summary: Temperature Reading
+                value:
+                  data:
+                    temperature: 97.2
+                    unit: 'F'
+                  deviceId: '864200058904872'
+                  readingType: 'Temperature'
+                  time: '1721399330000'
+              PeakFlow:
+                summary: Peak Flow Reading
+                value:
+                  data:
+                    fev1: 1.85
+                    pef: 322
+                  deviceId: '864486063185330'
+                  readingType: 'PeakFlow'
+                  time: '1721399528000'
+              SleepingMatActivity:
+                summary: Sleeping Mat Activity Reading
+                value:
+                  data:
+                    bedTime:
+                      - '2024-07-19/04:00'
+                      - '2024-07-19/06:32'
+                      - '2024-07-19/07:14'
+                    bodyTurnOver: 25
+                    duration: '04:00~08:00'
+                    getUpTime:
+                      - '2024-07-19/06:01'
+                      - '2024-07-19/07:11'
+                    pulse: 71
+                    respiration: 14
+                  deviceId: '864145065715185'
+                  readingType: 'SleepingMatActivity'
+                  time: '1721399835000'
+              SleepingMatDuration:
+                summary: Sleeping Mat Duration Reading
+                value:
+                  data:
+                    bodyTurnOver: 40
+                    deepSleep: 134
+                    duration: '20:00~08:00'
+                    lightSleep: 242
+                    pulse: 65
+                    rem: 50
+                    respiration: 19
+                  deviceId: '864145065457382'
+                  readingType: 'SleepingMatDuration'
+                  time: '1721397746000'
+      responses:
+        '2XX':
+          description: Successful operation
+
+  readingsV2:
+    post:
+      summary: V2 readings data - new used model
+      description: A new reading has been received from the device
+      tags:
+        - V2Webhook 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReadingsV2'
+            examples:
+              BloodPressure:
+                summary: Blood Pressure Reading
+                value:
+                  data:
+                    arrhythmia: 0
+                    diastolic: 98
+                    pulse: 62
+                    systolic: 122
+                  deviceId: '864593054464085'
+                  readingType: 'BloodPressure'
+                  time: '1721382524000'
+                  mem: 0
+                  tzOffsetMinutes: '-200'
+                  genVer: '2'
+              BloodGlucose:
+                summary: Blood Glucose Reading
+                value:
+                  data:
+                    glucose: 110
+                    readingPeriod: 'before'
+                  deviceId: '864351055723276'
+                  readingType: 'BloodGlucose'
+                  time: '1721386225000'
+                  mem: 0
+                  tzOffsetMinutes: '-200'
+                  genVer: '2'
+              Weight:
+                summary: Weight Reading
+                value:
+                  data:
+                    unit: 'lb'
+                    weight: 135
+                  deviceId: '864200059066903'
+                  readingType: 'Weight'
+                  time: '1721400730106'
+                  mem: 0
+                  tzOffsetMinutes: '-200'
+                  genVer: '2'
+              SpO2:
+                summary: SpO2 Reading
+                value:
+                  data:
+                    battery: 61
+                    pi: 20
+                    pulse: 83
+                    rsrp: 24
+                    spo2: 98
+                  deviceId: '351358815532467'
+                  readingType: 'SpO2'
+                  time: '1721400715000'
+                  mem: 0
+                  tzOffsetMinutes: '-200'
+                  genVer: '2'
+              Temperature:
+                summary: Temperature Reading
+                value:
+                  data:
+                    temperature: 97.2
+                    unit: 'F'
+                  deviceId: '864200058904872'
+                  readingType: 'Temperature'
+                  time: '1721399330000'
+                  mem: 0
+                  tzOffsetMinutes: '-200'
+                  genVer: '2'
+              PeakFlow:
+                summary: Peak Flow Reading
+                value:
+                  data:
+                    fev1: 1.85
+                    pef: 322
+                  deviceId: '864486063185330'
+                  readingType: 'PeakFlow'
+                  time: '1721399528000'
+                  mem: 0
+                  tzOffsetMinutes: '-200'
+                  genVer: '2'
+              SleepingMatActivity:
+                summary: Sleeping Mat Activity Reading
+                value:
+                  data:
+                    bedTime:
+                      - '2024-07-19/04:00'
+                      - '2024-07-19/06:32'
+                      - '2024-07-19/07:14'
+                    bodyTurnOver: 25
+                    duration: '04:00~08:00'
+                    getUpTime:
+                      - '2024-07-19/06:01'
+                      - '2024-07-19/07:11'
+                    pulse: 71
+                    respiration: 14
+                  deviceId: '864145065715185'
+                  readingType: 'SleepingMatActivity'
+                  time: '1721399835000'
+                  mem: 0
+                  tzOffsetMinutes: '-200'
+                  genVer: '2'
+              SleepingMatDuration:
+                summary: Sleeping Mat Duration Reading
+                value:
+                  data:
+                    bodyTurnOver: 40
+                    deepSleep: 134
+                    duration: '20:00~08:00'
+                    lightSleep: 242
+                    pulse: 65
+                    rem: 50
+                    respiration: 19
+                  deviceId: '864145065457382'
+                  readingType: 'SleepingMatDuration'
+                  time: '1721397746000'
+                  mem: 0
+                  tzOffsetMinutes: '-200'
+                  genVer: '2'
+      responses:
+        '2XX':
+          description: Successful operation
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    UpdateDeviceSettings:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enable or disable alarms on the device
+          examples:
+            - 'true'
+        arstart:
+          type: string
+          pattern: '^[0-2][0-9][0-5][0-9]$'
+          description: Defines when the device alarm should be started at. The format is in HH:MM
+          examples:
+            - '1100'
+        arstop:
+          type: string
+          pattern: '^[0-2][0-9][0-5][0-9]$'
+          description: Defines when the device alarm should be stopped at. The format is in HH:MM
+          examples:
+            - '1230'
+      required:
+        - enabled
+        - arstart
+        - arstop
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+            - 'The provided arstart time is invalid. It should be in HHMM format.'
+      required:
+        - message
+    
+    ValidationErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+            - 'Validation error'
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                description: "Field name where the validation error occurred."
+                examples: 
+                 - "arstop"
+              message:
+                type: string
+                description: "Validation error message for the corresponding field."
+                examples: 
+                 - "arstop must be at least an hour upfront then arstart"
+      required:
+        - message
+      additionalProperties: false
+
+    Devdata:
+      type: object
+      description: Provides device metadata, including information such as battery level, signal strength, and more.
+      required:
+        - r
+        - batt
+        - cycles
+      properties:
+        r:
+          type: string
+          description: Indicates signal strength on a scale of 1 to 4, where 1 represents poor signal and 4 represents excellent signal.
+          enum:
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+          examples:
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+        batt:
+          type: string
+          description: Battery level on a scale of 0 to 10, where 0 indicates a dead battery and 10 indicates fully charged.
+          enum:
+            - '0'
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+            - '5'
+            - '6'
+            - '7'
+            - '8'
+            - '9'
+            - '10'
+          examples:
+            - '9'
+        cycles:
+          type: string
+          description: Indicates the number of attempts the device made to successfully transmit the reading.
+          pattern: '^[0-9]+$'
+          examples:
+            - '0'
+            - '1'
+            - '2'
+
+    Heartbeat:
+      required:
+        - deviceId
+        - time
+        - tzOffsetMinutes
+        - genVer
+        - devdata
+        - type
+      properties:
+        type:
+          type: string
+          description: Represents the reading type.          
+          enum:
+            - Heartbeat
+          examples:
+            - Heartbeat
+        deviceId:
+          type: string
+          pattern: '^\d{15}$'
+          description: The IMEI of the device
+          examples:
+            - '864581069137614'
+        time:
+          type: string
+          format: integer
+          description: Response time from the device in epoch format
+        tzOffsetMinutes:
+          type: string
+          format: integer
+          description: UTC offset in minutes
+          examples:
+            - '-200'
+        genVer:
+          type: string
+          format: string
+          enum:
+            - '2'
+          description: The device generation version          
+          examples:
+            - '2'
+        devdata:
+          $ref: '#/components/schemas/Devdata'
+
+    ReminderCleared:
+      required:
+        - deviceId
+        - time
+        - tzOffsetMinutes
+        - genVer
+        - devdata
+        - type
+      properties:
+        type:
+          type: string
+          description: Represents the reading type.
+          enum: 
+            - ReminderCleared
+          examples:
+            - ReminderCleared
+        deviceId:
+          type: string
+          pattern: '^\d{15}$'
+          description: The IMEI of the device
+          examples:
+            - '864581069137614'
+        time:
+          type: string
+          format: integer
+          description: Response time from the device in epoch format
+        tzOffsetMinutes:
+          type: string
+          format: integer
+          description: UTC offset in minutes
+          examples:
+            - '-200'
+        genVer:
+          type: string
+          format: string
+          enum:
+            - '2'
+          description: The device generation version
+          examples:
+            - '2'
+        devdata:
+          $ref: '#/components/schemas/Devdata'
+
+    SettingsResponse:
+      required:
+        - deviceId
+        - name
+        - time
+        - tzOffsetMinutes
+        - genVer
+        - status
+        - type
+      properties:
+        type:
+          type: string
+          description: Represents the reading type.
+          enum: 
+            - SettingsResponse
+          examples:
+            - SettingsResponse
+        deviceId:
+          type: string
+          pattern: '^\d{15}$'
+          description: The IMEI of the device
+          examples:
+            - '864581069137614'
+        time:
+          type: string
+          format: integer
+          description: Response time from the device in epoch format
+        tzOffsetMinutes:
+          type: string
+          format: integer
+          description: UTC offset in minutes
+          examples:
+            - '-200'
+        genVer:
+          type: string
+          format: string
+          enum:
+            - '2'
+          description: The device generation version
+          examples:
+            - '2'
+        status:
+          type: string
+          enum:
+            - ACK
+            - NACK
+          description: 'ACK - means the device acknowledged the change, and NACK means it did not'
+          examples:
+            - ACK
+            - NACK
+
+    BloodPressureData:
+      type: object
+      description: Blood pressure reading values
+      required:
+        - systolic
+        - diastolic
+      properties:
+        systolic:
+          type: number
+          format: integer
+          examples:
+            - 100
+        diastolic:
+          type: number
+          format: integer          
+          examples:
+            - 86
+        pulse:
+          type: number
+          format: integer          
+          examples:
+            - 60
+        arrhythmia:
+          type: number
+          format: integer          
+          enum: [0, 1]
+          description: Either arrhythmia has been detected (1), or not (0)
+          examples:
+            - 0
+      examples:
+        - { 'systolic': 149, 'diastolic': 86, 'pulse': 100, 'arrhythmia': 0 }
+
+    SpO2Data:
+      type: object
+      required:
+        - spo2
+      properties:
+        spo2:
+          type: number
+          format: integer          
+          examples:
+            - 98
+        pulse:
+          type: number
+          format: integer
+          examples:
+            - 65
+        battery:
+          type: number
+          format: integer
+          examples:
+            - 65
+        rsrp:
+          type: number
+          format: integer
+          examples:
+            - 65
+        pi:
+          type: number
+          format: integer
+          examples:
+            - 65
+      description: Spo2 reading value
+      examples:
+        - { 'spo2': 75, 'pulse': 61 }
+
+    BloodGlucoseData:
+      type: object
+      required:
+        - glucose
+      properties:
+        glucose:
+          type: number
+          format: float
+          examples:
+            - 110.0
+        readingPeriod:
+          type: string
+          enum:
+            - before
+            - after
+          examples:
+            - before
+      description: Blucose reading value
+      examples:
+        - { 'glucose': 110.0, 'pulse': 'before' }
+
+    WeightData:
+      type: object
+      required:
+        - weight
+        - unit
+      properties:
+        weight:
+          type: number
+          format: float
+          examples:
+            - 931.1
+        unit:
+          type: string
+          enum:
+            - lbs
+            - kg
+          examples:
+            - before
+      description: Weight reading value
+      examples:
+        - { 'weight': 931.1, 'unit': 'lbs' }
+
+    TemperatureData:
+      type: object
+      required:
+        - temperature
+        - unit
+      properties:
+        temperature:
+          type: number
+          format: float
+          examples:
+            - 67.6
+        unit:
+          type: string
+          enum:
+            - C
+            - F
+          examples:
+            - before
+      description: Temperature reading value
+      examples:
+        - { 'temperature': 67.6, 'unit': 'F' }
+
+    PeakFlowData:
+      type: object
+      required:
+        - fev1
+        - pef
+      properties:
+        fev1:
+          type: number
+          format: float
+          examples:
+            - 0.39
+        pef:
+          type: number
+          format: integer
+          examples:
+            - 79
+      description: Peak flow value
+      examples:
+        - { 'fev1': 0.39, 'pef': 79 }
+
+    SleepingMatActivityData:
+      type: object
+      required:
+        - respiration
+        - pulse
+        - bodyTurnOver
+        - bedTime
+        - getUpTime
+        - duration
+      properties:
+        respiration:
+          type: number
+          format: float
+          examples:
+            - 0.39
+        pulse:
+          type: number
+          format: integer
+          examples:
+            - 79
+        duration:
+          type: string
+          examples:
+            - 20:00~00:00
+        bodyTurnOver:
+          type: number
+          format: integer
+          examples:
+            - 5
+        bedTime:
+          type: array
+          items:
+            type: string
+          examples:
+            - ['2022-06-30/20:01', '2022-06-30/20:55']
+        getUpTime:
+          type: array
+          items:
+            type: string
+          examples:
+            - ['2022-06-30/20:01', '2022-06-30/20:55']
+      description: Occurs on 4 hour intervals after 20:00 and after activity is detected
+      examples:
+        - {
+            'bedTime': ['2022-06-30/20:01', '2022-06-30/20:55'],
+            'bodyTurnOver': 5,
+            'duration': '20:00~00:00',
+            'getUpTime': ['2022-06-30/20:22'],
+            'pulse': 83,
+            'respiration': 11,
+          }
+
+    SleepingMatDurationData:
+      type: object
+      required:
+        - respiration
+        - pulse
+        - bodyTurnOver
+        - duration
+        - rem
+        - lightSleep
+        - deepSleep
+      properties:
+        respiration:
+          type: number
+          format: integer
+          examples:
+            - 15
+        pulse:
+          type: number
+          format: integer
+          examples:
+            - 79
+        duration:
+          type: string
+          examples:
+            - 20:00~00:00
+        bodyTurnOver:
+          type: number
+          format: integer
+          examples:
+            - 5
+        rem:
+          type: number
+          format: integer
+          examples:
+            - 22
+        lightSleep:
+          type: number
+          format: integer          
+          examples:
+            - 400
+        deepSleep:
+          type: number
+          format: integer          
+          examples:
+            - 55
+      description: Occurs 1 time at the end of the sleep interval
+      examples:
+        - {
+            'respiration': 15,
+            'pulse': 120,
+            'bodyTurnOver': 5,
+            'rem': 22,
+            'lightSleep': 400,
+            'deepSleep': 55,
+            'duration': '20:00~08:00',
+          }
+
+    ReadingsV1:
+      type: object
+      required:
+        - data
+        - deviceId
+        - readingType
+        - time
+      properties:
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/BloodPressureData'
+            - $ref: '#/components/schemas/BloodGlucoseData'
+            - $ref: '#/components/schemas/WeightData'
+            - $ref: '#/components/schemas/SpO2Data'
+            - $ref: '#/components/schemas/TemperatureData'
+            - $ref: '#/components/schemas/PeakFlowData'
+            - $ref: '#/components/schemas/SleepingMatActivityData'
+            - $ref: '#/components/schemas/SleepingMatDurationData'
+        deviceId:
+          type: string
+          description: Represents the device identifier mostly IMEI.
+        readingType:
+          type: string
+          description: Represents the reading type.
+          enum:
+            - BloodPressure
+            - BloodGlucose
+            - Weight
+            - SpO2
+            - Temperature
+            - PeakFlow
+            - SleepingMatActivity
+            - SleepingMatDuration
+        time:
+          type: string
+          format: int64
+          description: Unix timestamp in milliseconds
+
+    ReadingsV2:
+      type: object
+      required:
+        - data
+        - deviceId
+        - readingType
+        - time
+        - tzOffsetMinutes
+        - genVer
+        - mem
+        - devdata
+      properties:
+        data:
+          description: Holds the reading data
+          oneOf:
+            - $ref: '#/components/schemas/BloodPressureData'
+            - $ref: '#/components/schemas/BloodGlucoseData'
+            - $ref: '#/components/schemas/WeightData'
+            - $ref: '#/components/schemas/SpO2Data'
+            - $ref: '#/components/schemas/TemperatureData'
+            - $ref: '#/components/schemas/PeakFlowData'
+            - $ref: '#/components/schemas/SleepingMatActivityData'
+            - $ref: '#/components/schemas/SleepingMatDurationData'
+        deviceId:
+          type: string
+          description: Represents the device identifier mostly IMEI.
+        readingType:
+          type: string
+          description: Represents the reading type.
+          enum:
+            - BloodPressure
+            - BloodGlucose
+            - Weight
+            - SpO2
+            - Temperature
+            - PeakFlow
+            - SleepingMatActivity
+            - SleepingMatDuration
+        time:
+          type: string
+          pattern: '^\d+$'
+          description: Unix timestamp in milliseconds
+        tzOffsetMinutes:
+          type: ["string", "null"]
+          pattern: '^\d+$'
+          description: UTC offset in minutes. `null` is provided if the device does not support this data
+          examples:
+            - '-200'
+            - '400'
+            - null
+        genVer:
+          type: string
+          enum: ['1', '2']
+          description: The device generation version
+          examples:
+            - '2'
+            - '1'
+        mem:
+          type: ["string", "null"]
+          description: Indicates if the reading if a memory `"1"` or a nomal `"0"` or `null` if value not provided by the device
+          enum: ['0', '1']
+          examples:
+            - '0'
+            - '1'
+            - null
+        devdata:
+          description: Contains device metadata like radious, battery level and cycles. It could be `null` if the device does not support this data
+          oneOf:
+            - $ref: '#/components/schemas/Devdata'
+            - type: "null"
