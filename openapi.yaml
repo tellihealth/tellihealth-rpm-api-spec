@@ -46,7 +46,8 @@ paths:
   /v1/devices/{deviceId}/settings:
     post:
       summary: Updates the device settings
-      description: Updates the device settings
+      description:
+        $ref: ./md/v2_device_settings.md
       operationId: updateDeviceSettings
       tags:
         - DeviceSettings
@@ -92,7 +93,8 @@ webhooks:
   heartbeat:
     post:
       summary: A new heartbeat has been received from the device
-      description: A new heartbeat has been received from the device
+      description:
+        $ref: ./md/v2_heartbeat.md
       operationId: heartbeatEvent
       tags:
         - V2Webhook
@@ -110,7 +112,8 @@ webhooks:
   reminderCleared:
     post:
       summary: User has cleared the reminder on the device
-      description: User has cleared the reminder on the device
+      description:
+        $ref: ./md/v2_cleared_reminder.md
       operationId: reminderClearedEvent
       tags:
         - V2Webhook
@@ -128,7 +131,8 @@ webhooks:
   settingsResponse:
     post:
       summary: The device responded to settings change request
-      description: The device responded to settings change request
+      description:
+        $ref: ./md/v2_settings_ack.md
       operationId: settingsResponseEvent
       tags:
         - V2Webhook
@@ -257,7 +261,8 @@ webhooks:
   readingsV2:
     post:
       summary: V2 readings data - updated user model
-      description: A new reading has been received from the device
+      description:
+        $ref: ./md/v2_readings.md
       operationId: readingsV2Event
       tags:
         - V2Webhook
