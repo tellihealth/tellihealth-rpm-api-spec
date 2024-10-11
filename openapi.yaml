@@ -131,7 +131,7 @@ webhooks:
   settingsResponse:
     post:
       summary: The device responded to settings change request
-      description:
+      description: 
         $ref: ./md/v2_settings_ack.md
       operationId: settingsResponseEvent
       tags:
