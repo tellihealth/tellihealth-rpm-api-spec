@@ -28,6 +28,10 @@ jobs:
           run: |
             npm install ci
     
+        - name: Lint OpenApi spec
+          run: |
+            npm run lint
+        
         - name: Render OpenApi spec
           run: |
             npm run build:doc
@@ -37,4 +41,4 @@ jobs:
           if: github.ref == 'refs/heads/main'
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./ # default ./public
+            publish_dir: ./

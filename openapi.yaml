@@ -7,8 +7,10 @@ info:
   x-audience: external-partner
   x-logo:
     url: https://i0.wp.com/tellihealth.com/wp-content/uploads/2023/05/TelliHealthLogo1-2.webp?w=500&ssl=1
-    backgroundColor: #FFFFFF
     altText: Tellihealth logo
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT    
 
 servers:
   - url: https://dev-api.tellihealth.com
@@ -45,6 +47,7 @@ paths:
     post:
       summary: Updates the device settings
       description: Updates the device settings
+      operationId: updateDeviceSettings
       tags: 
         - DeviceSettings
       security:
@@ -90,8 +93,11 @@ webhooks:
     post:
       summary: A new heartbeat has been received from the device
       description: A new heartbeat has been received from the device
+      operationId: heartbeatEvent
       tags:
         - V2Webhook
+      security:
+        - apiKeyAuth: []        
       requestBody:
         description: Heartbeat from the device
         content:
@@ -105,8 +111,11 @@ webhooks:
     post:
       summary: User has cleared the reminder on the device
       description: User has cleared the reminder on the device
+      operationId: reminderClearedEvent
       tags:
         - V2Webhook
+      security:
+        - apiKeyAuth: []        
       requestBody:
         description: Cleared reminder from the device
         content:
@@ -120,8 +129,11 @@ webhooks:
     post:
       summary: The device responded to settings change request
       description: The device responded to settings change request
+      operationId: settingsResponseEvent
       tags:
         - V2Webhook
+      security:
+        - apiKeyAuth: []        
       requestBody:
         description: The device response to the settings change request
         content:
@@ -135,8 +147,11 @@ webhooks:
     post:
       summary: V1 readings data - to be deprecated
       description: A new reading has been received from the device
+      operationId: readingsV1Event
       tags:
         - V1Webhook
+      security:
+        - apiKeyAuth: []      
       requestBody:
         required: true
         content:
@@ -238,13 +253,15 @@ webhooks:
       responses:
         '2XX':
           description: Successful operation
-
   readingsV2:
     post:
-      summary: V2 readings data - new used model
+      summary: V2 readings data - updated user model
       description: A new reading has been received from the device
+      operationId: readingsV2Event
       tags:
-        - V2Webhook 
+        - V2Webhook
+      security:
+        - apiKeyAuth: []         
       requestBody:
         required: true
         content:
@@ -263,9 +280,10 @@ webhooks:
                   deviceId: '864593054464085'
                   readingType: 'BloodPressure'
                   time: '1721382524000'
-                  mem: 0
+                  mem: '0'
                   tzOffsetMinutes: '-200'
                   genVer: '2'
+                  devdata: {'r': '1', 'batt': '9', 'cycles': '0'}
               BloodGlucose:
                 summary: Blood Glucose Reading
                 value:
@@ -275,9 +293,10 @@ webhooks:
                   deviceId: '864351055723276'
                   readingType: 'BloodGlucose'
                   time: '1721386225000'
-                  mem: 0
+                  mem: '0'
                   tzOffsetMinutes: '-200'
                   genVer: '2'
+                  devdata: {'r': '1', 'batt': '9', 'cycles': '0'}
               Weight:
                 summary: Weight Reading
                 value:
@@ -287,9 +306,10 @@ webhooks:
                   deviceId: '864200059066903'
                   readingType: 'Weight'
                   time: '1721400730106'
-                  mem: 0
+                  mem: '0'
                   tzOffsetMinutes: '-200'
                   genVer: '2'
+                  devdata: {'r': '1', 'batt': '9', 'cycles': '0'}
               SpO2:
                 summary: SpO2 Reading
                 value:
@@ -302,9 +322,10 @@ webhooks:
                   deviceId: '351358815532467'
                   readingType: 'SpO2'
                   time: '1721400715000'
-                  mem: 0
+                  mem: '0'
                   tzOffsetMinutes: '-200'
                   genVer: '2'
+                  devdata: {'r': '1', 'batt': '9', 'cycles': '0'}
               Temperature:
                 summary: Temperature Reading
                 value:
@@ -314,9 +335,10 @@ webhooks:
                   deviceId: '864200058904872'
                   readingType: 'Temperature'
                   time: '1721399330000'
-                  mem: 0
+                  mem: '0'
                   tzOffsetMinutes: '-200'
                   genVer: '2'
+                  devdata: {'r': '1', 'batt': '9', 'cycles': '0'}
               PeakFlow:
                 summary: Peak Flow Reading
                 value:
@@ -326,9 +348,10 @@ webhooks:
                   deviceId: '864486063185330'
                   readingType: 'PeakFlow'
                   time: '1721399528000'
-                  mem: 0
+                  mem: '0'
                   tzOffsetMinutes: '-200'
                   genVer: '2'
+                  devdata: {'r': '1', 'batt': '9', 'cycles': '0'}
               SleepingMatActivity:
                 summary: Sleeping Mat Activity Reading
                 value:
@@ -347,9 +370,10 @@ webhooks:
                   deviceId: '864145065715185'
                   readingType: 'SleepingMatActivity'
                   time: '1721399835000'
-                  mem: 0
+                  mem: '0'
                   tzOffsetMinutes: '-200'
                   genVer: '2'
+                  devdata: {'r': '1', 'batt': '9', 'cycles': '0'}
               SleepingMatDuration:
                 summary: Sleeping Mat Duration Reading
                 value:
@@ -364,9 +388,10 @@ webhooks:
                   deviceId: '864145065457382'
                   readingType: 'SleepingMatDuration'
                   time: '1721397746000'
-                  mem: 0
+                  mem: '0'
                   tzOffsetMinutes: '-200'
                   genVer: '2'
+                  devdata: {'r': '1', 'batt': '9', 'cycles': '0'}
       responses:
         '2XX':
           description: Successful operation
@@ -515,9 +540,11 @@ components:
         tzOffsetMinutes:
           type: string
           format: integer
+          pattern: ^(-)?\d+$          
           description: UTC offset in minutes
           examples:
             - '-200'
+            - '400'
         genVer:
           type: string
           format: string
@@ -558,9 +585,11 @@ components:
         tzOffsetMinutes:
           type: string
           format: integer
+          pattern: ^(-)?\d+$          
           description: UTC offset in minutes
           examples:
             - '-200'
+            - '400'
         genVer:
           type: string
           format: string
@@ -602,9 +631,11 @@ components:
         tzOffsetMinutes:
           type: string
           format: integer
+          pattern: ^(-)?\d+$
           description: UTC offset in minutes
           examples:
             - '-200'
+            - '400'
         genVer:
           type: string
           format: string
@@ -706,6 +737,7 @@ components:
             - after
           examples:
             - before
+            - after
       description: Blucose reading value
       examples:
         - { 'glucose': 110.0, 'pulse': 'before' }
@@ -724,13 +756,14 @@ components:
         unit:
           type: string
           enum:
-            - lbs
-            - kg
+            - 'lb'
+            - 'kg'
           examples:
-            - before
+            - 'kg'
+            - 'lb'
       description: Weight reading value
       examples:
-        - { 'weight': 931.1, 'unit': 'lbs' }
+        - { 'weight': 931.1, 'unit': 'lb' }
 
     TemperatureData:
       type: object
@@ -746,10 +779,11 @@ components:
         unit:
           type: string
           enum:
-            - C
-            - F
+            - 'C'
+            - 'F'
           examples:
-            - before
+            - 'C'
+            - 'F'
       description: Temperature reading value
       examples:
         - { 'temperature': 67.6, 'unit': 'F' }
@@ -965,7 +999,7 @@ components:
           description: Unix timestamp in milliseconds
         tzOffsetMinutes:
           type: ["string", "null"]
-          pattern: '^\d+$'
+          pattern: '^(-)?\d+$'
           description: UTC offset in minutes. `null` is provided if the device does not support this data
           examples:
             - '-200'
@@ -973,7 +1007,9 @@ components:
             - null
         genVer:
           type: string
-          enum: ['1', '2']
+          enum:
+            - '1'
+            - '2'
           description: The device generation version
           examples:
             - '2'
@@ -981,13 +1017,16 @@ components:
         mem:
           type: ["string", "null"]
           description: Indicates if the reading if a memory `"1"` or a nomal `"0"` or `null` if value not provided by the device
-          enum: ['0', '1']
+          enum:
+            - '0'
+            - '1'
           examples:
             - '0'
             - '1'
-            - null
         devdata:
           description: Contains device metadata like radious, battery level and cycles. It could be `null` if the device does not support this data
           oneOf:
             - $ref: '#/components/schemas/Devdata'
             - type: "null"
+          examples:
+            - {'r': '1', 'batt': '9', 'cycles': '0'}
