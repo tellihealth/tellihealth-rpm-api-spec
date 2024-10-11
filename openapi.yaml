@@ -146,7 +146,7 @@ webhooks:
   readingsV1:
     post:
       summary: V1 readings data - to be deprecated
-      description: A new reading has been received from the device
+      description: $ref: ./md/v1_readings.md
       operationId: readingsV1Event
       tags:
         - V1Webhook
