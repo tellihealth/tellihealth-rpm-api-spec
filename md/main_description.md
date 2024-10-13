@@ -36,6 +36,11 @@ In exchange, Telli Health provides the developer with the API key for calling en
 
 After you purchase Telli Health devices, you will receive an email containing the Device ID and Serial number for the device(s); you must match each device to a user on your platform.
 
+## Data Transmission Overview
+All integrations must support the readings webhook and be able to receive readings. All readings received from devices to the Telli Health platform are then sent to the POST URL in your profile in near real-time by HTTPS POST.  
+
+For high availability, data packets are replicated in a Telli Health Secure Database in the event of system outages. Contact Telli Health support if you require a replay of device readings.
+
 ## Authentication and Token Management
 
 The Telli Health platform expects inbound and outbound connections to be authenticated and secure.  
