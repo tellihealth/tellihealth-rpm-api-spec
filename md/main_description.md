@@ -6,7 +6,8 @@ This specification is still unofficial and should **not be used** until this sec
 
 ## Introduction
 
-Welcome to the Telli Health Developer Guide.  
+Welcome to the Telli Health Developer Guide. 
+
 The purpose of this document is to guide you through the Telli Health integration process, and focuses on how to get data from, or send data to, Telli Health's patient monitoring devices.
 
 ## Device Generations Overview
