@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
-  title: Tellihealth RPM API - Unofficial
-  version: Latest Updated 10-14-2024
+  title: Tellihealth RPM API
+  version: 1.0.0
   description:
     $ref: ./md/main_description.md
   x-audience: external-partner
