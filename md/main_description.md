@@ -4,11 +4,7 @@ This specification is still unofficial and should **not be used** until this sec
 
 # Telli Health Developer's Guide and Specifications
 
-## Introduction
-
-Welcome to the Telli Health Developer Guide. 
-
-The purpose of this document is to guide you through the Telli Health integration process, and focuses on how to get data from, or send data to, Telli Health's patient monitoring devices.
+Welcome to the Telli Health Developer Guide, which will guide you through the Telli Health integration process, and focuses on how to get data from, or send data to, Telli Health's patient monitoring devices.
 
 ## Device Generations Overview
 
@@ -37,16 +33,16 @@ In exchange, Telli Health provides the developer with the API key for calling en
 After you purchase Telli Health devices, you will receive an email containing the Device ID and Serial number for the device(s); you must match each device to a user on your platform.
 
 ## Data Transmission Overview
-All integrations must support the readings webhook and be able to receive readings. All readings received from devices to the Telli Health platform are then sent to the POST URL in your profile in near real-time by HTTPS POST.  
+All integrations must be able to receive readings via the readings webhook. As Telli Health’s listener receives readings, Telli Health's data gateway sends your data to the POST URL  in your profile in near real-time by HTTPS POST. Telli Health’s POST will come from multiple US – East Amazon Cloud Storage IP addresses.  
 
-For high availability, data packets are replicated in a Telli Health Secure Database in the event of system outages. Contact Telli Health support if you require a replay of device readings.
+For high availability, data packets are replicated in a Telli Health Secure Database in the event of system outages. Contact Telli Health support if you require a playback of your device readings data.
 
 ## Authentication and Token Management
 
-The Telli Health platform expects inbound and outbound connections to be authenticated and secure.  
+The Telli Health platform recommends that you authenticate and secure inbound and outbound connections.
+
 Successful authentication creates a token that grants access to protected resources. To secure your connection, request an authentication token that you can add to all headers:  
 ```
 x-api-key: \<token\>  
 ```
 Contact Telli Health support to enable authentication.
-
