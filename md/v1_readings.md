@@ -8,7 +8,7 @@ Reading value messages are delivered when:
 3. The device can read the current time, and  
 4. The device acknowledges that the data was sent to the platform.
 
-Reading transmission types include Blood Pressure, Blood Glucose, Weight Scale, SpO2 Pulse Oximetry, Peak Flow, Thermometer, Sleeping Mat Activity, and Sleeping Mat Duration.
+Reading transmission types include Blood Pressure, Blood Glucose, Weight Scale, SpO2 Pulse Oximetry, Peak Flow, Thermometer, Sleeping Mat Activity, and Sleeping Mat Duration.  
 
 #### Sleep and Resting Heart Rate Monitor
 
