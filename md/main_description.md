@@ -1,7 +1,3 @@
-# Tellihealth RPM API specification - Unofficial
-
-This specification is still unofficial and should **not be used** until this section is removed.
-
 # Telli Health Developer's Guide and Specifications
 
 Welcome to the Telli Health Developer Guide, which will guide you through the Telli Health integration process, and focuses on how to get data from, or send data to, Telli Health's patient monitoring devices.
@@ -10,7 +6,9 @@ Welcome to the Telli Health Developer Guide, which will guide you through the Te
 
 Telli Health has Generation 1 and Generation 2 patient monitoring devices in circulation.  
 * Generation 1 devices send basic reading data to the platform in a unidirectional method using HTTPS.  
-* Generation 2 devices use secure bi-directional messaging to send readings, device data, checkin (AKA heartbeat) messages, and acknowledgments to the platform. The Gen2 devices can receive settings requests, which may vary based on the models' capabilities.  
+* Generation 2 devices use secure bi-directional messaging to send readings, device data, checkin (AKA heartbeat) messages, and acknowledgments to the platform. The Gen2 devices can receive settings requests, which may vary based on the models' capabilities.
+
+Devices that currently support Gen2 capabilities: TelliBP01
 
 To provide a seamless transition between API versions and device generations, readings from either generation device are cross-compatible with either API version endpoint. Therefore, Gen1 device readings can be received on API v2 endpoints, and Generation 2 device readings can be received on existing API v1 endpoints.
   
@@ -28,7 +26,7 @@ For full system functionality, the platform developer must provide Telli Health 
 * The API version currently supported, and  
 * The API key required to access the HTTPS endpoint while sending information.
 
-In exchange, Telli Health provides the developer with the API key for calling endpoints on the Telli Health platform.  
+In exchange, Telli Health provides the developer with an API key for calling the endpoint(s) on the Telli Health platform.  
 
 After you purchase Telli Health devices, you will receive an email containing the Device ID and Serial number for the device(s); you must match each device to a user on your platform.
 
