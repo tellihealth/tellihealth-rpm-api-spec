@@ -5,13 +5,13 @@ Reading value messages are delivered when:
 
 1. The user activates the device,  
 2. The user takes a measurement,  
-3. The device can read the current time and  
+3. The device can read the current time, and  
 4. The device acknowledges that the data was sent to the platform.  
 
 OR
 1. The device is activated by a heartbeat,  
-2. A measurement is stored in the device’s memory,  
-3. The device can read the time that the reading was taken, and  
+2. The device can read the current time,
+3. A measurement is stored in the device’s memory, and  
 4. The device acknowledges that the data was sent to the platform.  
 
 Reading transmission types include Blood Pressure, Blood Glucose, Weight Scale, SpO2 Pulse Oximetry, Peak Flow, Thermometer, Sleeping Mat Activity, and Sleeping Mat Duration.
