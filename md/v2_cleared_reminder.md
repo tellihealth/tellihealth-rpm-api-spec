@@ -2,7 +2,7 @@
 
 The user manually cleared the adherence reminder on the device without taking a reading.
 
-An manually cleared message alert is delivered to the Telli Health platform from the device when:
+A manually cleared message alert is delivered to the Telli Health platform from the device when:
 
 1. The device is in alert or adherence reminder mode,   
 2. The user uses a documented pattern of buttons to cancel the alert, and  
