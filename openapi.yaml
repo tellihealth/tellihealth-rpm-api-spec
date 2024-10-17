@@ -296,6 +296,7 @@ webhooks:
                   data:
                     glucose: 110
                     readingPeriod: "before"
+                    unit: "mg/dL"
                   deviceId: "864351055723276"
                   readingType: "BloodGlucose"
                   time: "1721386225000"
@@ -744,9 +745,17 @@ components:
           examples:
             - before
             - after
+        unit:
+          type: string
+          enum:
+            - "mg/dL"
+            - "mmol/L"
+          examples:
+            - "mg/dL"
+            - "mmol/L"
       description: Blucose reading value
       examples:
-        - { "glucose": 110.0, "pulse": "before" }
+        - { "glucose": 110.0, "pulse": "before", "unit": "mg/dL" }
 
     WeightData:
       type: object
