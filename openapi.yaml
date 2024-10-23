@@ -1013,8 +1013,11 @@ components:
           pattern: '^\d+$'
           description: Unix timestamp in milliseconds
         tzOffsetMinutes:
-          type: ["string", "null"]
-          pattern: '^(-)?\d+$'
+          oneOf:
+            - type: string
+              pattern: '^(-)?\d+$'
+              format: integer
+            - type: 'null'
           description: UTC offset in minutes. `null` is provided if the device does not support this data
           examples:
             - "-200"
@@ -1030,11 +1033,12 @@ components:
             - "2"
             - "1"
         mem:
-          type: ["string", "null"]
-          description: Indicates if the reading if a memory `"1"` or a nomal `"0"` or `null` if value not provided by the device
-          enum:
-            - "0"
-            - "1"
+          oneOf:
+            - enum:
+                - "0"
+                - "1"
+            - type: 'null'
+          description: Indicates if the reading if a memory `"1"` or a nomal `"0"` or `null` if value not provided by the device        
           examples:
             - "0"
             - "1"
