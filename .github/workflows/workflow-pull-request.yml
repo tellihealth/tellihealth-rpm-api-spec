@@ -22,6 +22,15 @@ jobs:
         with:
           submodules: true
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{matrix.node-version}}
+
+      - name: Install dependencies
+        run: |
+          npm install ci
+
       - name: Set up Go 1.23
         uses: actions/setup-go@v5
         with:
@@ -30,7 +39,7 @@ jobs:
           cache-dependency-path: backend/go.sum
         
       - name: code-checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:          
           ref: ${{ github.base_ref }}
           path: base
@@ -64,15 +73,6 @@ jobs:
       - name: run oasdiff breaking changes
         run: |
           oasdiff changelog ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions  
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{matrix.node-version}}
-
-      - name: Install dependencies
-        run: |
-          npm install ci
   
       - name: Lint OpenApi spec
         run: |
