@@ -19,6 +19,41 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
 
+        - name: Set up Go 1.23
+          uses: actions/setup-go@v5
+          with:
+            go-version: 1.23
+            check-latest: true
+            cache-dependency-path: backend/go.sum
+        
+        - name: code-checkout
+          uses: actions/checkout@v2
+          with:          
+            ref: ${{ github.base_ref }}
+            path: base
+
+        - name: code-checkout
+          uses: actions/checkout@v4
+          with:          
+            ref: ${{ github.head_ref }}
+            path: head
+  
+        - name: install oasdiff
+          run: |
+            go install github.com/tufin/oasdiff@latest
+
+        - name: run oasdiff diff
+          run: |
+            oasdiff diff ${{ github.workspace }}/base/openapi.yaml ${{ github.workspace }}/head/openapi.yaml
+
+        - name: run oasdiff changelog
+          run: |
+            oasdiff breaking ${{ github.workspace }}/base/openapi.yaml ${{ github.workspace }}/head/openapi.yaml -f githubactions
+            
+        - name: run oasdiff breaking changes
+          run: |
+            oasdiff changelog ${{ github.workspace }}/base/openapi.yaml ${{ github.workspace }}/head/openapi.yaml -f githubactions  
+
         - name: Set up Node.js
           uses: actions/setup-node@v4
           with:
