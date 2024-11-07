@@ -52,11 +52,11 @@ jobs:
 
       - name: generate openapi json base
         run: |
-          npx redocly bundle  ${{ github.workspace }}/base/openapi.yaml --output ${{ github.workspace }}/base/openapi.json
+          npx redocly bundle ${{ github.workspace }}/base/openapi.yaml --output ${{ github.workspace }}/base/openapi.json
       
       - name: generate openapi json revision
         run: |
-          npx redocly bundle  ${{ github.workspace }}/head/openapi.yaml --output ${{ github.workspace }}/head/openapi.json
+          npx redocly bundle ${{ github.workspace }}/head/openapi.yaml --output ${{ github.workspace }}/head/openapi.json
 
       - name: install oasdiff
         run: |
