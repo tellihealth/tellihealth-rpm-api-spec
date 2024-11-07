@@ -18,9 +18,7 @@ jobs:
         node-version: [20.x]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: true
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -37,43 +35,43 @@ jobs:
           go-version: 1.23
           check-latest: true
           cache-dependency-path: backend/go.sum
-        
-      - name: code-checkout
+
+      - name: Checkout base
         uses: actions/checkout@v4
-        with:          
+        with:
           ref: ${{ github.base_ref }}
           path: base
 
-      - name: code-checkout
+      - name: Checkout revison
         uses: actions/checkout@v4
-        with:          
+        with:
           ref: ${{ github.head_ref }}
           path: head
 
-      - name: generate openapi json base
+      - name: Generate openapi json base
         run: |
           npx redocly bundle ${{ github.workspace }}/base/openapi.yaml --output ${{ github.workspace }}/base/openapi.json
-      
-      - name: generate openapi json revision
+
+      - name: Generate openapi json revision
         run: |
           npx redocly bundle ${{ github.workspace }}/head/openapi.yaml --output ${{ github.workspace }}/head/openapi.json
 
-      - name: install oasdiff
+      - name: Install oasdiff
         run: |
           go install github.com/tufin/oasdiff@latest
 
-      - name: run oasdiff diff
+      - name: Run oasdiff diff
         run: |
           oasdiff diff ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json
 
-      - name: run oasdiff changelog
+      - name: Run oasdiff changelog
         run: |
           oasdiff breaking ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions
-          
-      - name: run oasdiff breaking changes
+
+      - name: Run oasdiff breaking changes
         run: |
-          oasdiff changelog ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions  
-  
+          oasdiff changelog ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions
+
       - name: Lint OpenApi spec
         run: |
           npm run lint
