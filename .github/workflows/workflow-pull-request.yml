@@ -34,12 +34,20 @@ jobs:
         with:          
           ref: ${{ github.base_ref }}
           path: base
-          
+
       - name: code-checkout
         uses: actions/checkout@v4
         with:          
           ref: ${{ github.head_ref }}
           path: head
+
+      - name: generate openapi json base
+        run: |
+          npx redocly bundle  ${{ github.workspace }}/base/openapi.yaml --output ${{ github.workspace }}/base/openapi.json
+      
+      - name: generate openapi json revision
+        run: |
+          npx redocly bundle  ${{ github.workspace }}/head/openapi.yaml --output ${{ github.workspace }}/head/openapi.json
 
       - name: install oasdiff
         run: |
@@ -47,15 +55,15 @@ jobs:
 
       - name: run oasdiff diff
         run: |
-          oasdiff diff ${{ github.workspace }}/base/openapi.yaml ${{ github.workspace }}/head/openapi.yaml
+          oasdiff diff ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json
 
       - name: run oasdiff changelog
         run: |
-          oasdiff breaking ${{ github.workspace }}/base/openapi.yaml ${{ github.workspace }}/head/openapi.yaml -f githubactions
+          oasdiff breaking ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions
           
       - name: run oasdiff breaking changes
         run: |
-          oasdiff changelog ${{ github.workspace }}/base/openapi.yaml ${{ github.workspace }}/head/openapi.yaml -f githubactions  
+          oasdiff changelog ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions  
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
