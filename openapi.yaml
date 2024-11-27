@@ -41,6 +41,9 @@ x-tagGroups:
   - name: Device settings
     tags:
       - DeviceSettings
+  - name: Device info
+    tags:
+      - DeviceInfo
 
 paths:
   /v1/devices/{deviceId}/settings:
@@ -76,6 +79,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ValidationErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/devices/{deviceId}/deviceGen:
+    get:
+      summary: Get the device generation version
+      description:
+        $ref: ./md/v2_device_info_gen_version.md
+      operationId: getDeviceGen
+      tags:
+        - DeviceInfo
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{15}$'
+          description: The IMEI of the device
+      responses:
+        "200":
+          description: Device generation version
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceGenVersion"
         "404":
           description: Not Found
           content:
@@ -1049,3 +1090,22 @@ components:
             - type: "null"
           examples:
             - { "r": "1", "batt": "9", "cycles": "0" }
+
+    DeviceGenVersion:
+      type: object
+      required:
+        - deviceId
+        - genVer
+      properties:
+        deviceId:
+          type: string
+          pattern: '^\d{15}$'
+          description: The unique identifier of the device (15-digit numeric string).
+          example: "228397703590107"
+        genVer:
+          type: string
+          enum: ["1", "2"]
+          description: The version of the generator, must be "1" or "2".
+          examples:
+           - "1"
+           - "2"
