@@ -85,6 +85,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden if the device does not belong to the requester.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Internal Server Error
           content:
@@ -117,6 +123,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DeviceGenVersion"
+        "403":
+          description: Forbidden if the device does not belong to the requester.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"                
         "404":
           description: Not Found
           content:
