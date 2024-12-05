@@ -33,6 +33,11 @@ jobs:
             go-version: 1.23
             check-latest: true
             cache-dependency-path: backend/go.sum
+
+        - name: Clear base and revision
+          run: |
+            git rm --cached base
+            git rm --cached head
         
         - name: Checkout base
           uses: actions/checkout@v4
