@@ -39,12 +39,14 @@ jobs:
           with:
             ref: ${{ github.base_ref }}
             path: base
+            submodules: false
 
         - name: Checkout revison
           uses: actions/checkout@v4
           with:
             ref: ${{ github.head_ref }}
             path: head
+            submodules: false
 
         - name: Generate openapi json base
           run: |
@@ -76,12 +78,7 @@ jobs:
         
         - name: Render OpenApi spec
           run: |
-            npm run build:doc
-
-        - name: Clear base and revision
-          run: |
-            git rm --cached base
-            git rm --cached head            
+            npm run build:doc    
 
         - name: Deploy
           uses: peaceiris/actions-gh-pages@v4
