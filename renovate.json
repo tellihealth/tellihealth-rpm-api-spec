@@ -1,5 +1,43 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>tellihealth/renovate-config:serverless_node_ts_present.json"],
-  "baseBranches": ["main"]
+  "extends": ["config:best-practices"],
+  "timezone": "UTC",
+  "schedule": ["before 3am on Monday"],
+  "automerge": false,
+  "automergeType": "pr",
+  "prConcurrentLimit": 10,
+  "labels": ["dependencies"],
+  "reviewers": ["@sromicevelyn"],
+  "baseBranches": ["development"],
+  "packageRules": [   
+    {
+      "description": "Group production dependencies",
+      "groupName": "Production Dependencies",
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },   
+    {
+      "matchDepTypes": ["devDependencies"],
+      "groupName": "devDependencies"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "groupName": "major updates",
+      "labels": ["major-update"],
+      "reviewers": ["@sromicevelyn"]
+    },
+    {
+      "matchPackageNames": ["node"],
+      "allowedVersions": "20.x",
+      "groupName": "node.js version"
+    }
+  ],
+  "postUpdateOptions": ["npmDedupe"],
+  "dependencyDashboard": true,
+  "separateMajorMinor": true,
+  "rangeStrategy": "auto",
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "all"
 }
