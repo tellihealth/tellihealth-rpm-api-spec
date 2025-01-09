@@ -14,7 +14,7 @@
       "groupName": "Production Dependencies",
       "matchDepTypes": ["dependencies"],
       "matchUpdateTypes": ["minor", "patch"]
-    },   
+    },
     {
       "matchDepTypes": ["devDependencies"],
       "groupName": "devDependencies"
