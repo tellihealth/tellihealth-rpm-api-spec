@@ -547,7 +547,7 @@ components:
             - "4"
         batt:
           type: string
-          description: Battery level on a scale of 0 to 10 or pwr, where 0 indicates a dead battery and 10 indicates fully charged and pwrd indicates the device is connected to external power source - charging
+          description: Battery level on a scale of 0 to 10 or pwr, where 0 indicates below threshold to operate device but communications are possible, 1-9 indicates level of charge, 10 indicates fully charged and pwr indicates the device is connected to external power source - charging
           enum:
             - "0"
             - "1"
