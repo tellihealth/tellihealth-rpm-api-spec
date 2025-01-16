@@ -563,7 +563,7 @@ components:
             - "pwr"
           examples:
             - "9"
-            - "prw"
+            - "pwr"
         cycles:
           type: string
           description: Indicates the number of attempts the device made to successfully transmit the reading.
