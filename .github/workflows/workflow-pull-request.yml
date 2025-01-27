@@ -41,12 +41,14 @@ jobs:
         with:
           ref: ${{ github.base_ref }}
           path: base
+          submodules: false
 
       - name: Checkout revison
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           path: head
+          submodules: false
 
       - name: Generate openapi json base
         run: |
