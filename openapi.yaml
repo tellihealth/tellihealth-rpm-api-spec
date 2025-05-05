@@ -128,7 +128,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"                
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
           description: Not Found
           content:
@@ -184,7 +184,7 @@ webhooks:
   settingsResponse:
     post:
       summary: The device responded to settings change request
-      description: 
+      description:
         $ref: ./md/v2_settings_ack.md
       operationId: settingsResponseEvent
       tags:
@@ -203,7 +203,7 @@ webhooks:
   readingsV1:
     post:
       summary: V1 readings data - to be deprecated
-      description: 
+      description:
         $ref: ./md/v1_readings.md
       operationId: readingsV1Event
       tags:
@@ -533,18 +533,21 @@ components:
         - cycles
       properties:
         r:
-          type: string
-          description: Indicates signal strength on a scale of 1 to 4, where 1 represents poor signal and 4 represents excellent signal.
-          enum:
-            - "1"
-            - "2"
-            - "3"
-            - "4"
+          oneOf:
+            - type: string
+              enum:
+                - "1"
+                - "2"
+                - "3"
+                - "4"
+            - type: "null"
+          description: Indicates signal strength on a scale of 1 to 4, where 1 represents poor signal and 4 represents excellent signal or `null` if signal strength is not provided by the device due to an error.
           examples:
             - "1"
             - "2"
             - "3"
             - "4"
+            - null
         batt:
           type: string
           description: Battery level on a scale of 0 to 10 or pwr, where 0 indicates below threshold to operate device but communications are possible, 1-9 indicates level of charge, 10 indicates fully charged and pwr indicates the device is connected to external power source - charging
@@ -1072,7 +1075,7 @@ components:
             - type: string
               pattern: '^(-)?\d+$'
               format: integer
-            - type: 'null'
+            - type: "null"
           description: UTC offset in minutes. `null` is provided if the device does not support this data
           examples:
             - "-200"
@@ -1092,8 +1095,8 @@ components:
             - enum:
                 - "0"
                 - "1"
-            - type: 'null'
-          description: Indicates if the reading if a memory `"1"` or a nomal `"0"` or `null` if value not provided by the device        
+            - type: "null"
+          description: Indicates if the reading if a memory `"1"` or a nomal `"0"` or `null` if value not provided by the device
           examples:
             - "0"
             - "1"
@@ -1121,5 +1124,5 @@ components:
           enum: ["1", "2"]
           description: The version of the generator, must be "1" or "2".
           examples:
-           - "1"
-           - "2"
+            - "1"
+            - "2"
