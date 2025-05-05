@@ -60,7 +60,7 @@ jobs:
 
       - name: Install oasdiff
         run: |
-          go install github.com/tufin/oasdiff@latest
+          go install github.com/oasdiff/oasdiff@latest
 
       - name: Run oasdiff diff
         run: |
