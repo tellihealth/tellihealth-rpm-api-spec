@@ -15,74 +15,74 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: ${{matrix.node-version}}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{matrix.node-version}}
 
-        - name: Install dependencies
-          run: |
-            npm install ci
+      - name: Install dependencies
+        run: |
+          npm install ci
 
-        - name: Set up Go 1.23
-          uses: actions/setup-go@v5
-          with:
-            go-version: 1.23
-            check-latest: true
-            cache-dependency-path: backend/go.sum
-        
-        - name: Checkout base
-          uses: actions/checkout@v4
-          with:
-            ref: ${{ github.base_ref }}
-            path: base
-            submodules: false
+      - name: Set up Go 1.23
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23
+          check-latest: true
+          cache-dependency-path: backend/go.sum
 
-        - name: Checkout revison
-          uses: actions/checkout@v4
-          with:
-            ref: ${{ github.head_ref }}
-            path: head
-            submodules: false
+      - name: Checkout base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+          path: base
+          submodules: false
 
-        - name: Generate openapi json base
-          run: |
-            npx redocly bundle ${{ github.workspace }}/base/openapi.yaml --output ${{ github.workspace }}/base/openapi.json
-          
-        - name: Generate openapi json revision
-          run: |
-            npx redocly bundle ${{ github.workspace }}/head/openapi.yaml --output ${{ github.workspace }}/head/openapi.json
-    
-        - name: Install oasdiff
-          run: |
-            go install github.com/tufin/oasdiff@latest
-    
-        - name: Run oasdiff diff
-          run: |
-            oasdiff diff ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json
-  
-        - name: Run oasdiff changelog
-          run: |
-            oasdiff breaking ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions
-            
-        - name: Run oasdiff breaking changes
-          run: |
-            oasdiff changelog ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions
-    
-        - name: Lint OpenApi spec
-          run: |
-            npm run lint
-        
-        - name: Render OpenApi spec
-          run: |
-            npm run build:doc    
+      - name: Checkout revison
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          path: head
+          submodules: false
 
-        - name: Deploy
-          uses: peaceiris/actions-gh-pages@v4
-          if: github.ref == 'refs/heads/main'
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./
+      - name: Generate openapi json base
+        run: |
+          npx redocly bundle ${{ github.workspace }}/base/openapi.yaml --output ${{ github.workspace }}/base/openapi.json
+
+      - name: Generate openapi json revision
+        run: |
+          npx redocly bundle ${{ github.workspace }}/head/openapi.yaml --output ${{ github.workspace }}/head/openapi.json
+
+      - name: Install oasdiff
+        run: |
+          go install github.com/oasdiff/oasdiff@latest
+
+      - name: Run oasdiff diff
+        run: |
+          oasdiff diff ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json
+
+      - name: Run oasdiff changelog
+        run: |
+          oasdiff breaking ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions
+
+      - name: Run oasdiff breaking changes
+        run: |
+          oasdiff changelog ${{ github.workspace }}/base/openapi.json ${{ github.workspace }}/head/openapi.json -f githubactions
+
+      - name: Lint OpenApi spec
+        run: |
+          npm run lint
+
+      - name: Render OpenApi spec
+        run: |
+          npm run build:doc
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
