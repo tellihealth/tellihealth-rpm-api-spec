@@ -1,37 +1,64 @@
 {
-  "extends": ["config:best-practices"],
+  "extends": [
+    "config:best-practices"
+  ],
   "timezone": "UTC",
-  "schedule": ["before 3am on Monday"],
+  "schedule": [
+    "before 3am on Monday"
+  ],
   "automerge": false,
   "automergeType": "pr",
   "prConcurrentLimit": 10,
-  "labels": ["dependencies"],
-  "reviewers": ["@sromicevelyn"],
-  "baseBranches": ["main"],
-  "packageRules": [   
+  "labels": [
+    "dependencies"
+  ],
+  "reviewers": [
+    "@sromicevelyn"
+  ],
+  "baseBranchPatterns": [
+    "main"
+  ],
+  "packageRules": [
     {
       "description": "Group production dependencies",
       "groupName": "Production Dependencies",
-      "matchDepTypes": ["dependencies"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchDepTypes": [
+        "dependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
     },
     {
-      "matchDepTypes": ["devDependencies"],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
       "groupName": "devDependencies"
     },
     {
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "major updates",
-      "labels": ["major-update"],
-      "reviewers": ["@sromicevelyn"]
+      "labels": [
+        "major-update"
+      ],
+      "reviewers": [
+        "@sromicevelyn"
+      ]
     },
     {
-      "matchPackageNames": ["node"],
+      "matchPackageNames": [
+        "node"
+      ],
       "allowedVersions": "20.x",
       "groupName": "node.js version"
     }
   ],
-  "postUpdateOptions": ["npmDedupe"],
+  "postUpdateOptions": [
+    "npmDedupe"
+  ],
   "dependencyDashboard": true,
   "separateMajorMinor": true,
   "rangeStrategy": "auto",
