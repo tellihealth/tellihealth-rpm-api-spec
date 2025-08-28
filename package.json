@@ -6,6 +6,21 @@
     "type": "git",
     "url": "https://github.com/tellihealth/tellihealth-rpm-api-spec.git"
   },
+  "lint-staged": {
+    "*.js": "prettier",
+    "*.ts": "eslint"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git",
+      "useEmoji": true
+    }
+  },
   "engines": {
     "node": "^20"
   },
@@ -16,9 +31,15 @@
   ],
   "author": "Simun Romic <sromic@evelyn.one>",
   "devDependencies": {
-    "@redocly/cli": "^1.34.2",
-    "husky": "^9.1.7",
-    "react-dom": "^19.1.0"
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@commitlint/cz-commitlint": "19.8.1",
+    "@redocly/cli": "2.0.8",
+    "commitizen": "4.3.1",
+    "cz-git": "1.12.0",
+    "husky": "9.1.7",
+    "lint-staged": "16.1.5",
+    "react-dom": "19.1.1"
   },
   "private": "false",
   "scripts": {
