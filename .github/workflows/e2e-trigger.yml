@@ -38,7 +38,8 @@ jobs:
       - name: Trigger E2E readings tests workflow
         run: |
           curl -X POST \
-            -H "Authorization: token ${{ steps.generate-token.outputs.token }}" \
+            -H "Authorization: Bearer ${{ steps.generate-token.outputs.token }}" \
             -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/tellihealth/tellihealth-readings-e2e/dispatches \
-            -d "{\"event_type\": \"tellihealth-rpm-api-spec\", \"client_payload\": {\"stage\": \"${{ matrix.stage }}\"}}"
+            -d '{"event_type": "tellihealth-rpm-api-spec", "client_payload": {"stage": "${{ matrix.stage }}"}}"
