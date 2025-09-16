@@ -669,7 +669,6 @@ components:
     SettingsResponse:
       required:
         - deviceId
-        - name
         - time
         - tzOffsetMinutes
         - genVer
