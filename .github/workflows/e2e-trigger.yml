@@ -1,0 +1,40 @@
+name: Trigger E2E tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger-e2e-tests:
+    name: Trigger E2E tests for ${{ matrix.stage }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+        stage: [dev, preprod, prod]
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.stage }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{matrix.node-version}}
+
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.TELLIHEATH_READINGS_E2E_APP_ID }}
+          private-key: ${{ secrets.TELLIEALTH_READINGS_E2E_APP_PRIVATE_KEY }}
+
+      - name: Trigger E2E readings tests workflow
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ steps.generate-token.outputs.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/tellihealth/tellihealth-readings-e2e/dispatches \
+            -d "{\"event_type\": \"tellihealth-rpm-api-spec\", \"client_payload\": {\"stage\": \"${{ matrix.stage }}\"}}"
