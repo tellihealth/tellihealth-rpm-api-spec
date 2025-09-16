@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   trigger-e2e-tests:
     name: Trigger E2E tests for ${{ matrix.stage }}
