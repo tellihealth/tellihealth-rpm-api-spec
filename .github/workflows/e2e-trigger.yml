@@ -34,6 +34,7 @@ jobs:
         with:
           app-id: ${{ secrets.TELLIHEATH_READINGS_E2E_APP_ID }}
           private-key: ${{ secrets.TELLIEALTH_READINGS_E2E_APP_PRIVATE_KEY }}
+          repositories: "tellihealth-readings-e2e"
 
       - name: Trigger E2E readings tests workflow
         run: |
