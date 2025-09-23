@@ -40,3 +40,12 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/tellihealth/tellihealth-readings-e2e/dispatches \
             -d '{"event_type": "tellihealth-rpm-api-spec", "client_payload": {"stage": "${{ matrix.stage }}"}}'
+
+      - name: Trigger E2E RPM API tests workflow
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ steps.generate-token.outputs.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/tellihealth/tellihealth-rpm-api-e2e/dispatches \
+            -d '{"event_type": "tellihealth-rpm-api-spec", "client_payload": {"stage": "${{ matrix.stage }}"}}'
