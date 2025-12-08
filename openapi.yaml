@@ -30,6 +30,9 @@ tags:
   - name: DeviceSettings
     x-displayName: Manage device settings
     description: Change the device settings.
+  - name: DeviceSimManagement
+    x-displayName: Device SIM Management
+    description: Manage device SIM card operations (activate, suspend, terminate).
 
 x-tagGroups:
   - name: Old webhook models V1
@@ -44,6 +47,9 @@ x-tagGroups:
   - name: Device info
     tags:
       - DeviceInfo
+  - name: Device SIM Management
+    tags:
+      - DeviceSimManagement
 
 paths:
   /v1/devices/{deviceId}/settings:
@@ -142,6 +148,92 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /v1/devices/{deviceId}/sim/activate/1:
+    post:
+      summary: Activate SIM
+      description: Activate the SIM card for the specified device. This action is asynchronous and a webhook will be sent when the action is completed.
+      operationId: activateSim
+      tags:
+        - DeviceSimManagement
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[0-9]{15}$"
+          description: Device IMEI
+      responses:
+        "202":
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceSimActionResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+        "409":
+          description: Conflict - An action is already in progress for this device
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConflictError"
+        "500":
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/devices/{deviceId}/sim/terminate/1:
+    post:
+      summary: Terminate SIM
+      description: Terminate the SIM card for the specified device. This action is asynchronous and a webhook will be sent when the action is completed.
+      operationId: terminateSim
+      tags:
+        - DeviceSimManagement
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[0-9]{15}$"
+          description: Device IMEI
+      responses:
+        "202":
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceSimActionResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+        "409":
+          description: Conflict - An action is already in progress for this device
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConflictError"
+        "500":
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 webhooks:
   heartbeat:
     post:
@@ -197,6 +289,57 @@ webhooks:
           application/json:
             schema:
               $ref: "#/components/schemas/SettingsResponse"
+      responses:
+        "2XX":
+          description: Return a 2XX status to indicate that the data was received successfully
+  simStateChange:
+    post:
+      summary: SIM card state has changed
+      description: Webhook sent when a SIM card reaches a final state (activated, terminated, suspended) or an error/timeout occurs.
+      operationId: simStateChangeEvent
+      tags:
+        - V2Webhook
+      security:
+        - apiKeyAuth: []
+      requestBody:
+        description: SIM state change event
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SimStateChangeEvent"
+            examples:
+              Activated:
+                summary: SIM Activated
+                value:
+                  eventType: "SimStateChange"
+                  deviceId: "864593054464085"
+                  previousState: "suspended"
+                  state: "activated"
+                  time: "1721382524000"
+              Terminated:
+                summary: SIM Terminated
+                value:
+                  eventType: "SimStateChange"
+                  deviceId: "864593054464085"
+                  previousState: "activated"
+                  state: "terminated"
+                  time: "1721382524000"
+              Error:
+                summary: SIM State Change Error
+                value:
+                  eventType: "SimStateChange"
+                  deviceId: "864593054464085"
+                  previousState: "activated"
+                  state: "error"
+                  time: "1721382524000"
+              Timeout:
+                summary: SIM State Change Timeout
+                value:
+                  eventType: "SimStateChange"
+                  deviceId: "864593054464085"
+                  previousState: "activated"
+                  state: "stale_timeout"
+                  time: "1721382524000"
       responses:
         "2XX":
           description: Return a 2XX status to indicate that the data was received successfully
@@ -1125,3 +1268,82 @@ components:
           examples:
             - "1"
             - "2"
+
+    DeviceSimActionResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Response message from the SIM management operation.
+          examples:
+            - "Request accepted"
+      required:
+        - message
+
+    ConflictError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message indicating a conflict.
+          examples:
+            - "An action is already in progress for this device"
+        deviceId:
+          type: string
+          description: The device ID for which the conflict occurred.
+          examples:
+            - "864593054464085"
+      required:
+        - message
+
+    SimState:
+      type: string
+      description: Represents the possible states of a SIM card.
+      enum:
+        - activated
+        - terminated
+        - suspended
+        - stale_timeout
+        - error
+        - unknown
+      examples:
+        - activated
+        - terminated
+        - suspended
+        - stale_timeout
+        - error
+        - unknown
+
+    SimStateChangeEvent:
+      type: object
+      description: Event sent when a SIM card reaches a final state or an error/timeout occurs.
+      required:
+        - eventType
+        - deviceId
+        - previousState
+        - state
+        - time
+      properties:
+        eventType:
+          type: string
+          description: The type of the event.
+          enum:
+            - SimStateChange
+          examples:
+            - SimStateChange
+        deviceId:
+          type: string
+          pattern: '^\d{15}$'
+          description: The IMEI of the device.
+          examples:
+            - "864593054464085"
+        previousState:
+          $ref: "#/components/schemas/SimState"
+        state:
+          $ref: "#/components/schemas/SimState"
+        time:
+          type: string
+          pattern: '^\d+$'
+          description: Unix timestamp in milliseconds when the state change occurred.
+          examples:
+            - "1721382524000"
