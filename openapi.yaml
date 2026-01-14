@@ -13,9 +13,9 @@ info:
     url: https://opensource.org/licenses/MIT
 
 servers:
-  - url: https://dev-api.tellihealth.com
+  - url: https://api.dev.tellihealth.com
     description: Dev
-  - url: https://preprod-api.tellihealth.com
+  - url: https://api.preprod.tellihealth.com
     description: Preprod
   - url: https://api.tellihealth.com
     description: Prod
