@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [24.x]
         stage: [dev, preprod, prod]
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.stage }}
