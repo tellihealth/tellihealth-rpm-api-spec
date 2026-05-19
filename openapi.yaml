@@ -6,7 +6,7 @@ info:
     $ref: ./md/main_description.md
   x-audience: external-partner
   x-logo:
-    url: https://i0.wp.com/tellihealth.com/wp-content/uploads/2023/05/TelliHealthLogo1-2.webp?w=500&ssl=1
+    url: https://signallamphealth-my.sharepoint.com/:u:/g/personal/sdipta_tellihealth_com/IQBEpyGXPOOcSKdSgP4Hb2CrARZyVo0AEL2EzX_MsIuvgBI?e=SV3EJg
     altText: Tellihealth logo
   license:
     name: MIT
