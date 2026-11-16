@@ -59,12 +59,14 @@
   "postUpdateOptions": [
     "npmDedupe"
   ],
-  "dependencyDashboard": true,
+  "dependencyDashboard": {
+    "enabled": true,
+    "osvVulnerabilitySummary": "all"
+  },
   "separateMajorMinor": true,
   "rangeStrategy": "auto",
   "vulnerabilityAlerts": {
     "enabled": true
   },
-  "osvVulnerabilityAlerts": true,
-  "dependencyDashboardOSVVulnerabilitySummary": "all"
+  "osvVulnerabilityAlerts": true
 }
